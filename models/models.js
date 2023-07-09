@@ -1,4 +1,5 @@
 const models = require('.')
+const Sequelize = require('sequelize')
 
 
 const getAllAuthors = async () => {
@@ -10,9 +11,13 @@ const getAllAuthors = async () => {
   }
 }
 
-const getAuthorByID = async (id) => {
-  try { const foundAuthor = await models.AuthorsModel.findOne({
-    where: { id },
+const getAuthorBySearchTerm = async (searchTerm) => {
+  try { const foundAuthor = await models.AuthorsModel.findAll({
+    where: {
+      [Sequelize.Op.or]: [
+        { id: searchTerm },
+        { nameLast: { [Sequelize.Op.like]: `%${searchTerm}%` } }]
+    },
     include:
     [{
       model: models.NovelsModel,
@@ -66,9 +71,13 @@ const getAllNovels = async () => {
   }
 }
 
-const getNovelByID = async (id) => {
+const getNovelBySearchTerm = async (searchTerm) => {
   try { const foundNovel = await models.NovelsModel.findOne({
-    where: { id },
+    where: {
+      [Sequelize.Op.or]: [
+        { id: searchTerm },
+        { title: { [Sequelize.Op.like]: `%${searchTerm}%` } }]
+    },
     include: [
       { model: models.AuthorsModel },
       { model: models.GenresModel }]
@@ -83,5 +92,5 @@ const getNovelByID = async (id) => {
 
 
 module.exports = {
-  getAllAuthors, getAuthorByID, getAllGenres, getGenreByID, getAllNovels, getNovelByID
+  getAllAuthors, getAuthorBySearchTerm, getAllGenres, getGenreByID, getAllNovels, getNovelBySearchTerm
 }

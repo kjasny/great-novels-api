@@ -1,5 +1,5 @@
 const {
-  getAllAuthors, getAuthorByID, getAllGenres, getGenreByID, getAllNovels, getNovelByID
+  getAllAuthors, getAuthorBySearchTerm, getAllGenres, getGenreByID, getAllNovels, getNovelBySearchTerm
 } = require('../models/models')
 
 const getAllAuthorsController = async (request, response) => {
@@ -11,9 +11,9 @@ const getAllAuthorsController = async (request, response) => {
   }
 }
 
-const getAuthorByIdController = async (request, response) => {
-  try { const { id } = request.params
-    const foundAuthor = await getAuthorByID(id)
+const getAuthorBySearchTermController = async (request, response) => {
+  try { const { searchTerm } = request.params
+    const foundAuthor = await getAuthorBySearchTerm(searchTerm)
 
     return foundAuthor ? response.send(foundAuthor) : response.sendStatus(404)
   } catch (error) {
@@ -49,9 +49,9 @@ const getAllNovelsWithAuthorAndGenresController = async (request, response) => {
   }
 }
 
-const getNovelByIdWithAuthorAndGenresController = async (request, response) => {
-  try { const { id } = request.params
-    const foundNovel = await getNovelByID(id)
+const getNovelBySearchTermWithAuthorsAndGenresController = async (request, response) => {
+  try { const { searchTerm } = request.params
+    const foundNovel = await getNovelBySearchTerm(searchTerm)
 
     return foundNovel ? response.send(foundNovel) : response.sendStatus(404)
   } catch (error) {
@@ -61,9 +61,9 @@ const getNovelByIdWithAuthorAndGenresController = async (request, response) => {
 
 module.exports = {
   getAllAuthorsController,
-  getAuthorByIdController,
+  getAuthorBySearchTermController,
   getAllGenresController,
   getGenreByIdController,
   getAllNovelsWithAuthorAndGenresController,
-  getNovelByIdWithAuthorAndGenresController
+  getNovelBySearchTermWithAuthorsAndGenresController
 }
